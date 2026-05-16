@@ -1,33 +1,29 @@
 package main
 
-import "net/http"
-
-type PolzaClient struct {
-	//Клиент для пользы
-	//все поля создаются один раз и больше не меняются
-	BaseURL    string
-	APIKey     string
-	HTTPClient *http.Client //как пульт от телевизора (должен быть один экземпляр)
-}
-
-func New(BaseURL, APIKey string) *PolzaClient {
-	//валидация
-	return &PolzaClient{
-		BaseURL:    BaseURL,
-		APIKey:     APIKey,
-		HTTPClient: &http.Client{},
-	}
-}
-
-func (c *PolzaClient) Generate(r GenerateRequest)
-
-type GenerateRequest struct {
-	Style  string
-	Title  string
-	Prompt string
-	Mode   string
-}
+import (
+	"extra_muse/polza"
+	"fmt"
+	"os"
+)
 
 func main() {
 
+	API_KEY := os.Getenv("POLZA_API_KEY")
+
+	PolzaClient := polza.New("https://polza.ai/api/v1/media", API_KEY)
+
+	GenerateRequestSimple := polza.GenerateRequest{
+		Model: "suno/generate",
+		Input: polza.InputRequest{
+			Prompt: "Электронная музыка. Хардкор техно. Бочки. Басс. Быстро. ",
+		},
+	}
+
+	res, err := PolzaClient.Generate(GenerateRequestSimple)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(res)
 }
