@@ -1,0 +1,8 @@
+ASYNC START
+ASYNC END
+Response data: {"id":"gen_2172375911287230465","object":"media.generation","status":"completed","created":1780238852,"model":"suno/generate","data":[{"url":"https://s3.polza.ai/f/215526/2026/05/t_b1de191bce33ae1c.mp3","thumbnail_url":"https://s3.polza.ai/f/215526/2026/05/t_39f8bce909e87577.jpg","title":"Сломай Пол","duration":159.6},{"url":"https://s3.polza.ai/f/215526/2026/05/t_6c6b67d74750e6f2.mp3","thumbnail_url":"https://s3.polza.ai/f/215526/2026/05/t_778702b00813a4e3.jpg","title":"Сломай Пол","duration":134.68}],"usage":{"output_units":2,"cost_rub":15,"cost":15}}^Csignal: interrupt
+mathew@MacBook-Pro-Mathew extra_muse % вщслу
+
+НАдо записать что есть варианты работойц с потсгресом через встандартный пакет + драйвер
+обычное подключение через обынчый pgx (каждая транзакция - одно полкючение модет лечь )
+или pgxpool (создает пул соединений заранее и их переиспрользует )
