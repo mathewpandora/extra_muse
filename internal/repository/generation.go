@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"extra_muse/internal/model"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -12,7 +13,7 @@ func CreateGenerationsTablle(ctx context.Context, db *pgxpool.Pool) error {
 			id SERIAL PRIMARY KEY,
 			tg_id BIGINT NOT NULL,
 			prompt TEXT,
-			status VARCHAR(20) NOT NULL DEFAULT 'pending',
+			status VARCHAR(20) NOT NULL DEFAULT 'done',
 			gen_id VARCHAR(100),
 			track_url1 TEXT,
 			image_url1 TEXT,
@@ -22,6 +23,15 @@ func CreateGenerationsTablle(ctx context.Context, db *pgxpool.Pool) error {
 			title2 TEXT,
 			error TEXT
 	)`
-	_, err := db.Exec(ctx, query) //контекст чтобы  Иметь возможность прервать операцию, если, например, запрос к БД выполняется слишком долго (завис) – через context.WithTimeout или context.WithCancel
-	return err
+
+	if _, err := db.Exec(ctx, query); err != nil {
+return err //контекст чтобы  Иметь возможность прервать операцию, если, например, запрос к БД выполняется слишком долго (завис) – через context.WithTimeout или context.WithCancel
+	} 
+
+	return nil
+}
+
+type GenerationRepository interface{
+	Save() error
+	GetUserAll() ([]model.Track, error)
 }

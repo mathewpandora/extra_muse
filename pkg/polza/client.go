@@ -2,6 +2,7 @@ package polza
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -97,21 +98,30 @@ func (c *PolzaClient) Generate(r GenerateRequest) (*ShortResponse, error) {
 	}
 
 	switch resp.StatusCode {
-
 	case 200:
-
 		var result GenerateResponse
-
 		if err := json.Unmarshal(BytesResponse, &result); err != nil {
 			fmt.Println("Generate, ", err)
 		}
-
 		if result.Status == "failed" {
 			fmt.Println(errors.New(result.ErrorDetail.Message))
+			return 
 		}
-
-
 		fmt.Printf("Response data: %+v\n", result) //+v возвращает структуру в человекочитаемом виде 
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		query := `
+			INSERT INTO generations 
+				(tg_id, prompt, status, gen_id, track_url1, image_url1, title1, 
+				track_url2, image_url2, title2, error)
+			VALUES 
+				($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);
+				`
+	if	_, err := c.DB.Exec(ctx, query, nil, r.Input.Prompt, result.Status, result.ID, result.ResponseData[0].URL, result.ResponseData[0].Image, result.ResponseData[0].Title,
+    result.ResponseData[0].URL, result.ResponseData[0].Image, result.ResponseData[0].Title, nil); err != nil {
+		fmt.Println("ВАЖНО ЛОГИРОВАТЬ СИТУАЦИЯ КОГДА ГОРУТИНА НЕ ЗАПИСАЛА В БАЗУ")
+	}
+	fmt.Println(result)
 
 	case 401:
 		fmt.Println(errors.New("Ошибка авторизации. Проверьте API-ключ."))

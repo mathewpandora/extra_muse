@@ -1,5 +1,13 @@
 package polza
 
+type GenerateResponse struct {
+	ID          string      `json:"id"` //gen_2172375911287230465
+	Status      string      `json:"status"`//completed
+	Created     int         `json:"created"`//1780238852 (привести в нормальный формат)
+	ResponseData []Track  `json:"data"`
+	ErrorDetail ErrorDetail `json:"error"`
+}
+
 type GenerateRequest struct {
 	Model string       `json:"model"`
 	Input InputRequest `json:"input"`
@@ -10,14 +18,6 @@ type InputRequest struct {
 	Prompt string `json:"prompt"`
 	Style  string `json:"style"`
 	Title  string `json:"title"`
-}
-
-type GenerateResponse struct {
-	ID          string      `json:"id"` //gen_2172375911287230465
-	Status      string      `json:"status"`//completed
-	Created     int         `json:"created"`//1780238852 (привести в нормальный формат)
-	ResponseData []Track  `json:"data"`
-	ErrorDetail ErrorDetail `json:"error"`
 }
 
 type Track struct{

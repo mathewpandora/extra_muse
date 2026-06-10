@@ -22,7 +22,7 @@ func ConnectToDB(connString string) (*pgxpool.Pool, error) {
 	err = pool.Ping(ctx)
 
 	if err != nil {
-    pool.Close()
+    //pool.Close()
     return nil, fmt.Errorf("база не отвечает: %w", err)
 }
 	
