@@ -9,7 +9,7 @@ import (
 
 type UserRepository interface{
 	Save(model.NewUserData) error
-	GetById(TgID int) (*model.User, error)
+	GetById(TgID int64) (*model.User, error)
 }
 
 func CreateUserTable(ctx context.Context,  db *pgxpool.Pool) error {

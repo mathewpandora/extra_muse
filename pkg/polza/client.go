@@ -23,7 +23,7 @@ type PolzaClient struct {
 	HTTPClient  *http.Client //как пульт от телевизора (должен быть один экземпляр) Общий таймаут на весь запрос  Политика обработки редиректов Хранение кук
 }
 
-func New(BaseURL, APIKey string, dbPool *pgxpool.Pool) *PolzaClient {
+func NewPolzaClient(BaseURL, APIKey string, dbPool *pgxpool.Pool) *PolzaClient {
 	//валидация
 	var ContentType = "application/json"
 	return &PolzaClient{
@@ -81,7 +81,6 @@ func (c *PolzaClient) Generate(r GenerateRequest) (*ShortResponse, error) {
 	go func() {
 		fmt.Println("ASYNC START")
 		resp, err := c.sendRequest("POST", c.BaseURL, c.APIKey, Reader)
-		fmt.Println("ASYNC END")
 
 	if err != nil {
 		fmt.Println("Ошибка", err)
@@ -112,13 +111,13 @@ func (c *PolzaClient) Generate(r GenerateRequest) (*ShortResponse, error) {
 		defer cancel()
 		query := `
 			INSERT INTO generations 
-				(tg_id, prompt, status, gen_id, track_url1, image_url1, title1, 
+				(prompt, status, gen_id, track_url1, image_url1, title1, 
 				track_url2, image_url2, title2, error)
 			VALUES 
 				($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);
 				`
-	if	_, err := c.DB.Exec(ctx, query, nil, r.Input.Prompt, result.Status, result.ID, result.ResponseData[0].URL, result.ResponseData[0].Image, result.ResponseData[0].Title,
-    result.ResponseData[0].URL, result.ResponseData[0].Image, result.ResponseData[0].Title, nil); err != nil {
+	if	_, err := c.DB.Exec(ctx, query, r.Input.Prompt, result.Status, result.ID, result.ResponseData[0].URL, result.ResponseData[0].Image, result.ResponseData[0].Title,
+    result.ResponseData[1].URL, result.ResponseData[1].Image, result.ResponseData[1].Title, nil); err != nil {
 		fmt.Println("ВАЖНО ЛОГИРОВАТЬ СИТУАЦИЯ КОГДА ГОРУТИНА НЕ ЗАПИСАЛА В БАЗУ")
 	}
 	fmt.Println(result)
