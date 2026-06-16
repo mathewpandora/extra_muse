@@ -7,24 +7,21 @@ import (
 	"extra_muse/pkg/polza"
 )
 
-type GenerationService struct{
-	UserRepository repository.UserRepository
+type GenerationService struct {
+	UserRepository       repository.UserRepository
 	GenerationRepository repository.GenerationRepository
-	PolzaClient polza.PolzaClient
-	PricePerGen     float64
-
+	PolzaClient          polza.PolzaClient
+	PricePerGen          float64
 }
 
-func NewGenerataionService(GenRepo repository.GenerationRepository, UserRepo repository.UserRepository, polzaClient polza.PolzaClient, PricePerGen float64) *GenerationService  {
+func NewGenerataionService(GenRepo repository.GenerationRepository, UserRepo repository.UserRepository, polzaClient polza.PolzaClient, PricePerGen float64) *GenerationService {
 	return &GenerationService{
-		UserRepository: UserRepo,
+		UserRepository:       UserRepo,
 		GenerationRepository: GenRepo,
-		PolzaClient: polzaClient,
-		PricePerGen: PricePerGen,
+		PolzaClient:          polzaClient,
+		PricePerGen:          PricePerGen,
 	}
 }
-
-
 
 func (gc *GenerationService) Generate(GenData model.NewGenerationData) error {
 	user, err := gc.UserRepository.GetById(GenData.TgID)
@@ -37,8 +34,4 @@ func (gc *GenerationService) Generate(GenData model.NewGenerationData) error {
 		return errors.New("You dont have enoufgh money to pay")
 	}
 
- //получаем пользователя из бд
- //получаем его баланс
- //проверяем хватает ли баланса 
 }
-

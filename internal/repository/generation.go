@@ -25,13 +25,13 @@ func CreateGenerationsTablle(ctx context.Context, db *pgxpool.Pool) error {
 	)`
 
 	if _, err := db.Exec(ctx, query); err != nil {
-return err //контекст чтобы  Иметь возможность прервать операцию, если, например, запрос к БД выполняется слишком долго (завис) – через context.WithTimeout или context.WithCancel
-	} 
+		return err //контекст чтобы  Иметь возможность прервать операцию, если, например, запрос к БД выполняется слишком долго (завис) – через context.WithTimeout или context.WithCancel
+	}
 
 	return nil
 }
 
-type GenerationRepository interface{
-	Save() error
+type GenerationRepository interface {
+	Save(model.NewGenerationData) error
 	GetUserAll() ([]model.Track, error)
 }

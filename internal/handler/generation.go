@@ -8,6 +8,7 @@ import (
 
 type GenerationHandler struct{
 	GenerationService service.GenerationService
+
 }
 
 func (gh *GenerationHandler) Generate(w http.ResponseWriter, r *http.Request) {
@@ -22,4 +23,4 @@ func (gh *GenerationHandler) Generate(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, `{"error": "invalid JSON"}`, http.StatusBadRequest)
 				return
 	}
-}
+}	
